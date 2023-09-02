@@ -7,6 +7,7 @@ const SearchApp = () => {
   const [searchItem, setSearchItem] = useState('')
   const [results, setResults] = useState([])
   const ref = useRef('')
+  const searchInput = useRef(null);
 
   const search = (event) => {
     event.preventDefault()
@@ -17,23 +18,23 @@ const SearchApp = () => {
     ref.current = event.target.value
   }
 
-  useEffect((query) => {
+  useEffect(() => {
       const requestUrl = `https://api.unsplash.com/search/photos?query=${searchItem}&per_page=10&client_id=${process.env.REACT_APP_UNSPLASH}`
       axios.get(requestUrl)
         .then(response => {
-          console.log(response.data);
           setResults(response.data.results)
         })
         .catch(error => {
           console.error("error", error);
         })
+      searchInput.current.blur()
 
   }, [searchItem])
 
   return (
     <div>
       <form onSubmit={search} className='searchPart'>
-        <input placeholder='search' onChange={handleChange} className='searchBar'/>
+        <input ref={searchInput} placeholder='Search images...' onChange={handleChange} className='searchBar'/>
       </form>
         <div className='container'>
           {results.map(result => (
