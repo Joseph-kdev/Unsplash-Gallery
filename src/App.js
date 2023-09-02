@@ -7,21 +7,18 @@ const SearchApp = () => {
   const [searchItem, setSearchItem] = useState('')
   const [results, setResults] = useState([])
   const ref = useRef('')
-  const apiKey = process.env.REACT_APP_UNSPLASH;
 
   const search = (event) => {
     event.preventDefault()
-    console.log(ref.current);
     setSearchItem(ref.current)
   }
 
   const handleChange = (event) => {
     ref.current = event.target.value
-    console.log(ref.current);
   }
 
   useEffect((query) => {
-      const requestUrl = `https://api.unsplash.com/search/photos?query=${searchItem}&per_page=10&client_id=${apiKey}`
+      const requestUrl = `https://api.unsplash.com/search/photos?query=${searchItem}&per_page=10&client_id=${process.env.REACT_APP_UNSPLASH}`
       axios.get(requestUrl)
         .then(response => {
           console.log(response.data);
