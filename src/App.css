@@ -5,12 +5,13 @@ background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+
 
 }
 .searchPart {
-    min-width: 95vw;
+    min-width: 100%;
     min-height: 5rem;
     background-color: #092A38;
     display: flex;
     justify-content: center;
     align-items: center;
+    margin-bottom: 4px;
 }
 .searchBar {
     min-width: 80vw;
@@ -24,28 +25,35 @@ background: linear-gradient(to right, #2C5364, #203A43, #0F2027); /* W3C, IE 10+
     text-align: center;
     background: rgba(255, 255, 255, 0.8);
 }
-.container {
-    margin-top: 0.5rem;
-    border-radius: 2px;
-    margin-right : 2%;
-    display: grid;
-    gap: 1rem;
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-    justify-items: start;
-    -webkit-border-radius: 2px;
-    -moz-border-radius: 2px;
-    -ms-border-radius: 2px;
-    -o-border-radius: 2px;
-}
-
 .images {
     width: 100%;
-    height: 100%;
-    object-fit: contain;
+    height: auto;
     border-radius: 14px;
     -webkit-border-radius: 14px;
     -moz-border-radius: 14px;
     -ms-border-radius: 14px;
     -o-border-radius: 14px;
-    margin: 5px;
 }
+.my-masonry-grid {
+    display: -webkit-box; /* Not needed if autoprefixing */
+    display: -ms-flexbox; /* Not needed if autoprefixing */
+    display: flex;
+    margin-left: -30px; /* gutter size offset */
+    width: auto;
+  }
+  .my-masonry-grid_column {
+    padding-left: 30px; /* gutter size */
+    background-clip: padding-box;
+  }
+  
+  /* Style your items */
+  .my-masonry-grid_column > div { /* change div to reference your elements you put in <Masonry> */
+    margin-bottom: 30px;
+  }
+
+  .notify {
+    width: 100%;
+    font-size: 26px;
+    color: white;
+    text-align: center;
+  }
