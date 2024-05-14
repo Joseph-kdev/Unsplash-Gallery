@@ -1,38 +1,66 @@
 import './App.css'
-import { useState, useEffect, useRef} from 'react'
+import { useEffect, useRef, useReducer} from 'react'
 import axios from 'axios'
 import Masonry from 'react-masonry-css'
 
+const reducer = (state,action) => {
+  switch (action.type) {
+    case "search-item":
+      return {...state, searchItem: action.payload}
+    case "search-done":
+      return {...state, searchDone: action.payload}
+    case "results-received":
+      return { ...state, results: action.payload }
+
+    default:
+      throw new Error()
+  }
+}
 
 const SearchApp = () => {
-  const [searchItem, setSearchItem] = useState('')
-  const [results, setResults] = useState([])
+  const [state, dispatch] = useReducer(reducer, { searchItem: '', searchDone: false, results: [] })
+
   const ref = useRef('')
   const searchInput = useRef(null);
-  const [searchDone, setSearchDone] = useState(false)
 
   const search = (event) => {
     event.preventDefault()
-    setSearchItem(ref.current)
-    setSearchDone(true)
+    dispatch({
+      type: 'search-item',
+      payload: ref.current
+    })
+    dispatch({
+      type: 'search-done',
+      payload: true
+    })
   }
+
+  // const download = (result) => {
+  //   axios.get(`result.links.download_location&client_id=${process.env.REACT_APP_UNSPLASH}`)
+  //     .then(response => {
+  //       console.log(response);
+  //     })
+  // }
 
   const handleChange = (event) => {
     ref.current = event.target.value
   }
 
   useEffect(() => {
-      const requestUrl = `https://api.unsplash.com/search/photos?query=${searchItem}&per_page=10&client_id=${process.env.REACT_APP_UNSPLASH}`
+      const requestUrl = `https://api.unsplash.com/search/photos?query=${state.searchItem}&per_page=10&client_id=${process.env.REACT_APP_UNSPLASH}`
       axios.get(requestUrl)
         .then(response => {
-          setResults(response.data.results)
+          dispatch({
+            type: "results-received",
+            payload: response.data.results
+          })
         })
         .catch(error => {
           console.error("error", error);
         })
       searchInput.current.blur()
 
-  }, [searchItem])
+  }, [state.searchItem])
 
 const breakPoints = {
   default: 3,
@@ -45,14 +73,14 @@ const breakPoints = {
       <form onSubmit={search} className='searchPart'>
         <input ref={searchInput} placeholder='Search images...' onChange={handleChange} className='searchBar'/>
       </form>
-      {searchDone && results.length === 0 ? (
-        <p className='notify'>No results for {searchItem}</p>
+      {state.searchDone && state.results.length === 0 ? (
+        <p className='notify'>No results for {state.searchItem}</p>
       ) : (
       <Masonry
         breakpointCols={breakPoints}
         className="my-masonry-grid"
         columnClassName="my-masonry-grid_column">
-          {results.map(result => (
+          {state.results.map(result => (
           <div key={result.id}>
           <img className='images' src={result.urls.small} alt={result.description} />
           </div>
